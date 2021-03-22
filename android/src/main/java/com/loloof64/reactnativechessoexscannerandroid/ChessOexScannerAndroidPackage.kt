@@ -1,4 +1,4 @@
-package com.reactnativechessoexscannerandroid
+package com.loloof64.reactnativechessoexscannerandroid
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
