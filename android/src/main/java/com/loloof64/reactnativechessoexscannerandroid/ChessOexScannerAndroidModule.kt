@@ -22,7 +22,7 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
   fun setupEngineUtils(appId: String, promise: Promise) {
     try {
       engineUtils = ChessEngineUtils(reactContext, appId)
-      promise.resolve(null)
+      promise.resolve(true)
     }
     catch (err: Exception) {
       promise.reject(err)
@@ -37,7 +37,8 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
 
   @ReactMethod
   fun installEngineFromMyStore(index: Int, promise: Promise) {
-    promise.resolve(engineUtils?.installEngineFromMyStore(index))
+    engineUtils?.installEngineFromMyStore(index)
+    promise.resolve(true)
   }
 
   @ReactMethod
@@ -47,7 +48,8 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
 
   @ReactMethod
   fun listInstalledEngines(promise: Promise) {
-    promise.resolve(engineUtils?.listInstalledEngines()?.convertToJsArray() ?: WritableNativeArray())
+    val results = engineUtils?.listInstalledEngines() ?: arrayOf()
+    promise.resolve(results.convertToJsArray())
   }
 
   @ReactMethod
@@ -61,12 +63,14 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
       }
     }
 
-    promise.resolve(engineUtils?.executeInstalledEngine(index, errorHandleCallback))
+    engineUtils?.executeInstalledEngine(index, errorHandleCallback)
+    promise.resolve(true)
   }
 
   @ReactMethod
   fun sendCommandToRunningEngine(command: String, promise: Promise) {
-    promise.resolve(engineUtils?.sendCommandToRunningEngine(command))
+    engineUtils?.sendCommandToRunningEngine(command)
+    promise.resolve(true)
   }
 
   @ReactMethod
@@ -78,7 +82,7 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
   fun stopCurrentRunningEngine(promise: Promise) {
     try {
       engineUtils?.stopCurrentRunningEngine()
-      promise.resolve(null)
+      promise.resolve(true)
     }
     catch (err: Exception) {
       promise.reject(err)

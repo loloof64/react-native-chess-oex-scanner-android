@@ -33,10 +33,12 @@ class ChessEngineUtils(private val context: Context, appId: String) {
         val engineFileName = selectedEngine.fileName
         val enginePackageName = selectedEngine.packageName
         val engineVersionCode = selectedEngine.versionCode
+        val enginesFolder = File(context.applicationContext.filesDir, enginesSubfolderName)
+        enginesFolder.mkdir()
 
         selectedEngine.copyToFiles(
             context.applicationContext.contentResolver,
-            File(context.applicationContext.filesDir, enginesSubfolderName)
+            enginesFolder
         )
 
         with(enginesSharedPreferences?.edit()) {
@@ -63,11 +65,13 @@ class ChessEngineUtils(private val context: Context, appId: String) {
         catch (ex: NumberFormatException) {
             throw IllegalStateException("The requested engine has not been copied yet in local files.")
         }
+        val enginesFolder = File(context.applicationContext.filesDir, enginesSubfolderName)
+        enginesFolder.mkdir()
         val engineLastVersionCode = resolver.ensureEngineVersion(
             engineName,
             enginePackage,
             currentVersionCode,
-            File(context.applicationContext.filesDir, enginesSubfolderName)
+            enginesFolder
         )
 
         return currentVersionCode < engineLastVersionCode
@@ -75,12 +79,14 @@ class ChessEngineUtils(private val context: Context, appId: String) {
 
     fun listInstalledEngines() : Array<String> {
         val enginesFolder = File(context.applicationContext.filesDir, enginesSubfolderName)
+        enginesFolder.mkdir()
         val files = enginesFolder.listFiles()?.filter { it.isFile }?.toTypedArray() ?: arrayOf<File>()
         return files.map { it.name }.toTypedArray()
     }
 
     fun executeInstalledEngine(index: Int, errorCallback: (Error) -> Unit) {
         val enginesFolder = File(context.applicationContext.filesDir, enginesSubfolderName)
+        enginesFolder.mkdir()
         val files = enginesFolder.listFiles()?.filter { it.isFile }?.toTypedArray() ?: arrayOf<File>()
         if (index >= files.size) throw ArrayIndexOutOfBoundsException("Requested index : ${index}, size: ${files.size}")
 
