@@ -4,15 +4,49 @@ import { StyleSheet, View, Text } from 'react-native';
 import ChessOexScannerAndroid from 'react-native-chess-oex-scanner-android';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [enginesStoreList, setEnginesStoreList] = React.useState<Array<string>>([]);
 
   React.useEffect(() => {
-    ChessOexScannerAndroid.multiply(3, 7).then(setResult);
+    async function setup() {
+      try {
+        await ChessOexScannerAndroid.setupEngineUtils("com.example.reactnativechessoexscannerandroid");
+      }
+      catch (err) {
+        throw err;
+      }
+    }
+
+    async function getStoreEnginesList() {
+      try {
+        const engines = await ChessOexScannerAndroid.getMyStoreEnginesNames();
+        return engines;
+      }
+      catch (err) {
+        throw err;
+      }
+    }
+
+    
+    setup().then(() => {}).catch((err) => console.error(err));
+    getStoreEnginesList().then((engines) => setEnginesStoreList(engines)).catch((err) => console.error(err));
+    
+
+    return function() {
+      ChessOexScannerAndroid.stopCurrentRunningEngine();
+    }
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      {
+        enginesStoreList.map((engineName) => {
+          return (
+            <Text key={engineName}>
+              {engineName}
+            </Text>
+          )
+        })
+      }
     </View>
   );
 }

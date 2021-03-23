@@ -1,9 +1,14 @@
 package com.loloof64.reactnativechessoexscannerandroid
 
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.*
+
+fun Array<String>.convertToJsArray() : WritableNativeArray {
+  var result = WritableNativeArray()
+  for (elem in this) {
+    result.pushString(elem)
+  }
+  return result
+}
 
 class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -14,13 +19,20 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
     var engineUtils: ChessEngineUtils? = null
 
   @ReactMethod
-  fun setupEngineUtils(appId: String) {
-    engineUtils = ChessEngineUtils(reactContext, appId)
+  fun setupEngineUtils(appId: String, promise: Promise) {
+    try {
+      engineUtils = ChessEngineUtils(reactContext, appId)
+      promise.resolve(null)
+    }
+    catch (err: Exception) {
+      promise.reject(err)
+    }
   }
 
   @ReactMethod
   fun getMyStoreEnginesNames(promise: Promise) {
-    promise.resolve(engineUtils?.getMyStoreEnginesNames() ?: arrayOf<String>())
+    val results = engineUtils?.getMyStoreEnginesNames() ?: arrayOf()
+    promise.resolve(results.convertToJsArray())
   }
 
   @ReactMethod
@@ -35,7 +47,7 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
 
   @ReactMethod
   fun listInstalledEngines(promise: Promise) {
-    promise.resolve(engineUtils?.listInstalledEngines())
+    promise.resolve(engineUtils?.listInstalledEngines()?.convertToJsArray() ?: WritableNativeArray())
   }
 
   @ReactMethod
@@ -63,7 +75,13 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
   }
 
   @ReactMethod
-  fun stopCurrentRunningEngine() {
-    engineUtils?.stopCurrentRunningEngine()
+  fun stopCurrentRunningEngine(promise: Promise) {
+    try {
+      engineUtils?.stopCurrentRunningEngine()
+      promise.resolve(null)
+    }
+    catch (err: Exception) {
+      promise.reject(err)
+    }
   }
 }
