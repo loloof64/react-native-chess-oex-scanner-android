@@ -18,10 +18,10 @@ class ChessEngineUtils(private val context: Context, appId: String) {
             Context.MODE_PRIVATE
         )
 
-    fun getMyStoreEnginesNames(): Array<String> {
+    fun getMyStoreEnginesNames(): List<String> {
         val resolver = ChessEngineResolver(context)
         val engines = resolver.resolveEngines()
-        return engines?.map { it.name }?.toTypedArray() ?: arrayOf()
+        return engines?.map { it.name } ?: listOf()
     }
 
     fun installEngineFromMyStore(index: Int) {
@@ -77,11 +77,11 @@ class ChessEngineUtils(private val context: Context, appId: String) {
         return currentVersionCode < engineLastVersionCode
     }
 
-    fun listInstalledEngines() : Array<String> {
+    fun listInstalledEngines() : List<String> {
         val enginesFolder = File(context.applicationContext.filesDir, enginesSubfolderName)
         enginesFolder.mkdir()
-        val files = enginesFolder.listFiles()?.filter { it.isFile }?.toTypedArray() ?: arrayOf<File>()
-        return files.map { it.name }.toTypedArray()
+        val files = enginesFolder.listFiles()?.filter { it.isFile } ?: listOf<File>()
+        return files.map { it.name }
     }
 
     fun executeInstalledEngine(index: Int, errorCallback: (Error) -> Unit) {
@@ -100,8 +100,8 @@ class ChessEngineUtils(private val context: Context, appId: String) {
         currentRunner?.sendCommand(command)
     }
 
-    fun readCurrentEnginePendingOutputs(): Array<String> {
-        return currentRunner?.readPendingOutputs() ?: arrayOf()
+    fun readCurrentEnginePendingOutputs(): List<String> {
+        return currentRunner?.readPendingOutputs() ?: listOf()
     }
 
     fun stopCurrentRunningEngine() {

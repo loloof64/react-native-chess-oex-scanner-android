@@ -2,8 +2,8 @@ package com.loloof64.reactnativechessoexscannerandroid
 
 import com.facebook.react.bridge.*
 
-fun Array<String>.convertToJsArray() : WritableNativeArray {
-  var result = WritableNativeArray()
+fun List<String>.convertToJsArray() : WritableNativeArray {
+  val result = WritableNativeArray()
   for (elem in this) {
     result.pushString(elem)
   }
@@ -31,7 +31,7 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
 
   @ReactMethod
   fun getMyStoreEnginesNames(promise: Promise) {
-    val results = engineUtils?.getMyStoreEnginesNames() ?: arrayOf()
+    val results = engineUtils?.getMyStoreEnginesNames() ?: listOf()
     promise.resolve(results.convertToJsArray())
   }
 
@@ -48,7 +48,7 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
 
   @ReactMethod
   fun listInstalledEngines(promise: Promise) {
-    val results = engineUtils?.listInstalledEngines() ?: arrayOf()
+    val results = engineUtils?.listInstalledEngines() ?: listOf()
     promise.resolve(results.convertToJsArray())
   }
 
@@ -69,13 +69,17 @@ class ChessOexScannerAndroidModule(private val reactContext: ReactApplicationCon
 
   @ReactMethod
   fun sendCommandToRunningEngine(command: String, promise: Promise) {
+    ///////////////////////////
+    println("Command is $command")
+    ///////////////////////////
     engineUtils?.sendCommandToRunningEngine(command)
     promise.resolve(true)
   }
 
   @ReactMethod
   fun readCurrentEnginePendingOutputs(promise: Promise) {
-    promise.resolve(engineUtils?.readCurrentEnginePendingOutputs())
+    val outputs = engineUtils?.readCurrentEnginePendingOutputs() ?: listOf()
+    promise.resolve(outputs.convertToJsArray())
   }
 
   @ReactMethod
