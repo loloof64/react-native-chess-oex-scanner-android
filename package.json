@@ -1,6 +1,6 @@
 {
   "name": "react-native-chess-oex-scanner-android",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Use your installed chess OEX engines on your android device in your Nativescript applications.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -11,7 +11,6 @@
     "src",
     "lib",
     "android",
-    "ios",
     "cpp",
     "react-native-chess-oex-scanner-android.podspec",
     "!lib/typescript/example",
@@ -33,7 +32,6 @@
   },
   "keywords": [
     "react-native",
-    "ios",
     "android"
   ],
   "repository": "https://github.com/loloof64/react-native-chess-oex-scanner-android",

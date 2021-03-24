@@ -1,6 +1,6 @@
 # react-native ChessOexScannerAndroid
 
-Use your installed chess OEX engines on your android device in your Nativescript applications.
+Use your installed chess OEX engines on your android device in your React Native applications.
 
 ## Installation
 
